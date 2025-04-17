@@ -12,10 +12,47 @@ This project simulates a full data management workflow including:
 - Multi-site data intake
 - Automated preprocessing and QC
 - Streamlit-based interactive dashboards
-- Git-powered version control and change tracking
+- Git-powered version control and file tracking
+- Versioned dataset comparisons with automatic changelog logging
 - SOPs and compliance documentation
 
-It mimics the responsibilities of a **Computational Health Informatics Data Manager II**.
+---
+
+## 🧪 Key Features
+
+- ✅ Clean and validate incoming clinical/behavioral datasets
+- ✅ Automatically generate QC reports (missing values, age range, site balance)
+- ✅ Track file-level changes using hashing + timestamps
+- ✅ View version history via Git commit logs
+- ✅ Interactive dropdown comparison of dataset versions
+- ✅ Automatic logging of comparison diffs to `CHANGELOG.md`
+- ✅ Live dashboard built with Streamlit
+
+---
+
+## 📊 Live Dashboard
+
+Launch it with:
+
+```bash
+streamlit run dashboard/app.py
+```
+
+You'll be able to:
+- View cleaned dataset summaries
+- Visualize distributions
+- Compare any two dataset versions via dropdown
+- See added/removed subjects
+- Audit pipeline activity from Git + file logs
+
+---
+
+## 🔄 Dataset Version Comparison
+
+Use the **🧾 Data Audit Trail** tab to:
+- Select any two cleaned datasets
+- View which subjects were added or removed
+- Automatically log the result in `CHANGELOG.md` (only once per comparison)
 
 ---
 
@@ -24,17 +61,18 @@ It mimics the responsibilities of a **Computational Health Informatics Data Mana
 ```
 clinical-data-platform/
 ├── data/
-│   ├── raw/                  # Unprocessed input files
-│   ├── cleaned/              # Processed data + QC reports
-│   └── metadata/             # Data dictionary & IRB/DUA docs
+│   ├── raw/                  # Unprocessed files
+│   ├── cleaned/              # Processed CSVs (v1, v2, etc.)
+│   └── metadata/             # Data dictionary & site info
 │
 ├── pipeline/
-│   ├── preprocess.py         # Data cleaning script
-│   ├── qc.py                 # QC report generator
-│   └── logging_utils.py      # File hashing + changelog
+│   ├── preprocess.py         # Cleaning logic
+│   ├── qc.py                 # QC checks
+│   ├── logging_utils.py      # File hash + changelog utilities
+│   └── compare_versions.py   # CLI version diff tool
 │
 ├── dashboard/
-│   └── app.py                # Streamlit dashboard
+│   └── app.py                # Streamlit dashboard app
 │
 ├── docs/
 │   ├── SOP_intake.md
@@ -43,7 +81,7 @@ clinical-data-platform/
 │   ├── git_commit_log.txt
 │   └── data_change_log.csv
 │
-├── notebooks/                # Optional: exploratory notebooks
+├── notebooks/
 ├── .gitignore
 ├── README.md
 └── CHANGELOG.md
@@ -51,49 +89,11 @@ clinical-data-platform/
 
 ---
 
-## 🧪 Key Features
+## 🧾 Version Tracking & Audit Logs
 
-- ✅ Clean and validate incoming behavioral and demographic datasets
-- ✅ Automatically generate quality control reports
-- ✅ Track all data file changes via hash logging
-- ✅ Maintain SOPs for compliance and training
-- ✅ Visualize data distributions and summaries with Streamlit
-- ✅ Include Git-based audit trail in the dashboard
-
----
-
-## 📊 Live Dashboard
-
-To launch:
-
-```bash
-streamlit run dashboard/app.py
-```
-
----
-
-## 📓 Version Tracking
-
-Git history and file hash logs are available under the **🧾 Data Audit Trail** section in the dashboard.
-
-Sample logs:
-
-```
-docs/git_commit_log.txt
-docs/data_change_log.csv
-```
-
----
-
-## 📚 Documentation
-
-See the `docs/` folder for:
-
-```
-SOPs on data intake, QC, and privacy
-Version control strategy
-Risk assessment policies
-```
+- `CHANGELOG.md`: records dataset comparisons with timestamps
+- `docs/git_commit_log.txt`: tracks Git commits
+- `docs/data_change_log.csv`: logs file hash/timestamp for processed datasets
 
 ---
 
@@ -117,8 +117,8 @@ Expert in data processing, automation, machine learning, and research infrastruc
 
 ---
 
-## ✅ To Do (Stretch Goals)
+## ✅ Stretch Goals
 
-- [ ] Simulate EEG/MRI modality data
-- [ ] Integrate automated data validation via `pandera`
-- [ ] Add multi-user GitHub-based simulation with pull requests
+- [ ] Integrate modality-level QC (EEG/fMRI placeholders)
+- [ ] Add column-level diff detection between dataset versions
+- [ ] Export comparison results to PDF or downloadable reports
