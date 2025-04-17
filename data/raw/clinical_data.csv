@@ -1,0 +1,7 @@
+subject_id,site,age,sex,IQ,diagnosis
+sub-001,A,10,F,105,ASD
+sub-002,B,12,M,-9999,TD
+sub-003,C,11,F,120,ASD
+sub-004,A,13,M,98,TD
+sub-005,B,14,F,110,ASD
+sub-006,C,12,M,-9999,TD
