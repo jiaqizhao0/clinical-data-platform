@@ -1,8 +1,8 @@
-# 🧠 Clinical Data Platform
+# 🧠 Clinical Data Platform Demo
 
-An end-to-end data management pipeline for multi-site clinical research projects, built to reflect real-world data manager responsibilities in healthcare and translational neuroscience environments.
+An end-to-end data management pipeline for multi-site clinical research projects
 
-> 💼 Created by Jiaqi Zhao | Project duration: April 2025
+> 💼 Created by Jiaqi Zhao 
 
 ---
 
@@ -14,7 +14,6 @@ This project simulates a full data management workflow including:
 - Streamlit-based interactive dashboards
 - Git-powered version control and file tracking
 - Versioned dataset comparisons with automatic changelog logging
-- SOPs and compliance documentation
 
 ---
 
@@ -112,13 +111,6 @@ Git / GitHub
 ## 👩🏻‍💻 About the Author
 
 **Jiaqi Zhao**  
-Former Data Core Lead & Clinical Research Coordinator  
-Expert in data processing, automation, machine learning, and research infrastructure
+Former Data Organization and Collaborative Services (DoCS) Core Lead @ Boston Children's Hospital  
+Expert in data processing, automation, machine learning
 
----
-
-## ✅ Stretch Goals
-
-- [ ] Integrate modality-level QC (EEG/fMRI placeholders)
-- [ ] Add column-level diff detection between dataset versions
-- [ ] Export comparison results to PDF or downloadable reports
