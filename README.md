@@ -101,6 +101,8 @@ clinical-data-platform/
 ```
 Python 3
 Pandas
+NumPy
+SciPy
 Matplotlib
 Streamlit
 Git / GitHub
