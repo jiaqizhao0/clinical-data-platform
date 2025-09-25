@@ -1,4 +1,5 @@
 import subprocess
+import sys
 import hashlib
 import os
 import sys
@@ -36,8 +37,8 @@ if os.path.exists(hash_log_path):
 if last_hash != current_hash:
     try:
         print(f"🧠 Raw file for {dataset_id} has changed — running preprocessing and QC...")
-        subprocess.run(["python", "pipeline/preprocess.py", dataset_id], check=True)
-        subprocess.run(["python", "pipeline/qc.py", cleaned_path], check=True)
+        subprocess.run([sys.executable, "pipeline/preprocess.py", dataset_id], check=True)
+        subprocess.run([sys.executable, "pipeline/qc.py", cleaned_path], check=True)
         print("✅ Preprocessing and QC completed.")
     except Exception as e:
         print(f"⚠️ Error running preprocessing or QC: {e}")

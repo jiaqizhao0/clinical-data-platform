@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import os
 import glob
 import subprocess
+import sys
 import numpy as np
 from scipy.stats import norm
 
@@ -61,8 +62,8 @@ hash_log_path = "docs/data_change_log.csv"
 # --- Preprocessing Runner (only runs once per dataset switch) ---
 if st.session_state.get("last_run_dataset") != dataset_id:
     try:
-        subprocess.run(["python", "pipeline/preprocess_qc_runner.py", dataset_id], check=True)
-        subprocess.run(["python", "pipeline/snapshot_compare.py", dataset_id], check=True)
+        subprocess.run([sys.executable, "pipeline/preprocess_qc_runner.py", dataset_id], check=True)
+        subprocess.run([sys.executable, "pipeline/snapshot_compare.py", dataset_id], check=True)
         st.session_state["last_run_dataset"] = dataset_id
     except Exception as e:
         st.warning(f"⚠️ Pipeline error: {e}")
