@@ -1,0 +1,29 @@
+🔍 QC Report for pseudo_abide_dataset_1_cleaned.csv
+Total rows: 300
+
+🔧 Missing Values Breakdown:
+- Missing age: 3 subject(s) → sub_0071, sub_0276, sub_0298
+- Missing IQ: 5 subject(s) → sub_0039, sub_0189, sub_0190, sub_0227, sub_0230
+
+Age outliers (<5 or >64): 1
+IQ outliers (<70 or >145): 2
+
+📊 Site Distribution:
+Yale    72
+UM_1    64
+NYU     56
+SDSU    54
+UCLA    54
+
+📊 Sex Distribution (M = 1, F = 2):
+1    168
+2    132
+
+📊 Scanner Type Distribution:
+GE         105
+Siemens    101
+Philips     94
+
+📊 Diagnosis Distribution (ASD = 1, TD = 0):
+1    156
+0    144

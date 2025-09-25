@@ -1,0 +1,14 @@
+subjectkey,interview_date,sex,age,IQ,site,diagnosis,scanner_type,missing_flag,age_outlier,IQ_outlier
+sub-0008,09/06/2021,1,9.0,62.0,ABCD,ASD,Philips,False,False,True
+sub-0016,04/09/2020,2,,93.0,MIT,ASD,Siemens,True,False,False
+sub-0020,10/23/2021,2,,106.0,Harvard,ASD,GE,True,False,False
+sub-0035,09/09/2020,2,7.2,,UCLA,TD,Siemens,True,False,False
+sub-0041,05/25/2021,1,,102.0,Harvard,ASD,Siemens,True,False,False
+sub-0068,01/14/2020,2,11.8,48.0,MIT,ASD,Siemens,False,False,True
+sub-0095,04/01/2022,1,19.7,15.0,NYU,ASD,Siemens,False,False,True
+sub-0101,06/10/2020,2,10.6,69.0,NYU,TD,GE,False,False,True
+sub-0104,09/22/2022,1,,124.0,NYU,TD,Philips,True,False,False
+sub-0121,03/02/2022,2,,96.0,BCH,ASD,Siemens,True,False,False
+sub-0151,08/18/2020,1,13.7,68.0,MIT,ASD,Philips,False,False,True
+sub-0169,12/26/2021,2,10.6,66.0,NYU,TD,GE,False,False,True
+sub-0191,06/10/2022,2,11.9,68.0,MIT,TD,Philips,False,False,True

@@ -1,26 +1,38 @@
-from pipeline.logging_utils import log_data_change
 import pandas as pd
-import os
+import numpy as np
 import sys
+import os
 
-# Support version argument
-input_file = sys.argv[1] if len(sys.argv) > 1 else "data/raw/clinical_data.csv"
-output_file = input_file.replace("raw", "cleaned").replace(".csv", "_cleaned.csv")
+# --- Get dataset name from CLI ---
+if len(sys.argv) < 2:
+    print("Usage: python preprocess.py <dataset_name.csv>")
+    sys.exit(1)
 
-# Load raw data
-df = pd.read_csv(input_file)
-df["subject_id"] = df["subject_id"].str.strip()
+dataset_name = sys.argv[1].replace(".csv", "")
+raw_path = f"data/raw/{dataset_name}.csv"
+cleaned_path = f"data/cleaned/{dataset_name}_cleaned.csv"
 
-# Remove invalid IQ values
-df_clean = df[df["IQ"] != -9999].copy()
 
-# Convert sex to binary
-df_clean["sex"] = df_clean["sex"].map({"F": 0, "M": 1})
+# Load dataset and treat -9999 and blanks as NaN
+df = pd.read_csv(raw_path, na_values=["", " ", "-9999"])
 
-# Save cleaned file
-os.makedirs("data/cleaned", exist_ok=True)
-df_clean.to_csv(output_file, index=False)
-log_data_change(input_file)
+df["subjectkey"] = df["subjectkey"].astype(str).str.strip()
+df = df[df["subjectkey"] != "nan"]
 
-print("✅ Preprocessing complete. Cleaned data saved.")
+# --- Fix interview date ---
+if "interview_date" in df.columns:
+    df["interview_date"] = pd.to_datetime(df["interview_date"], errors="coerce").dt.strftime("%m/%d/%Y")
 
+# Convert sex to binary (M = 1, F = 0)
+if df["sex"].astype(str).str.upper().isin(["M", "F"]).any():
+    df["sex"] = df["sex"].map({"M": 1, "F": 2, "m": 1, "f": 2})
+
+# Convert diagnosis to binary
+if df["diagnosis"].astype(str).str.upper().isin(["TD", "ASD"]).any():
+    df["diagnosis"] = df["diagnosis"].map({"TD": 0, "ASD": 1, "td": 0, "asd": 1})
+
+# Save cleaned dataset
+df.to_csv(cleaned_path, index=False)
+
+print(f"✅ Cleaned dataset saved to {cleaned_path}")
+print(f"📌 Rows with missing values are retained for QC review.")

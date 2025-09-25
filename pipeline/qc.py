@@ -1,46 +1,87 @@
 import pandas as pd
+import numpy as np
+import sys
+import os
+from pathlib import Path
 
-def run_qc_report(file_path, output_path):
-    df = pd.read_csv(file_path)
+if len(sys.argv) < 2:
+    print("Usage: python qc.py <cleaned_dataset_path>")
+    sys.exit(1)
 
-    # Prepare report content
-    report_lines = []
+cleaned_path = sys.argv[1]
+dataset_name = os.path.basename(cleaned_path).replace("_cleaned.csv", "")
+df = pd.read_csv(cleaned_path)
 
-    report_lines.append("📋 QC Report")
-    report_lines.append("=" * 40)
+# --- Flag missing and outliers ---
+df["missing_flag"] = df[["age", "IQ", "diagnosis"]].isnull().any(axis=1)
+df["age_outlier"] = (df["age"] < 5) | (df["age"] > 64)
+df["IQ_outlier"] = (df["IQ"] < 70) | (df["IQ"] > 145)
 
-    # 1. Missing values
-    report_lines.append("\n🧩 Missing Values:")
-    report_lines.append(df.isnull().sum().to_string())
 
-    # 2. Age outliers
-    report_lines.append("\n🎯 Age Outliers (age < 5 or > 100):")
-    age_outliers = df[(df["age"] < 5) | (df["age"] > 100)]
-    if age_outliers.empty:
-        report_lines.append("No age outliers.")
-    else:
-        report_lines.append(age_outliers.to_string(index=False))
+# --- Count summaries ---
+n_total = len(df)
+n_missing = df["missing_flag"].sum()
+n_age_outliers = df["age_outlier"].sum()
+n_IQ_outliers = df["IQ_outlier"].sum()
 
-    # 3. Site distribution
-    report_lines.append("\n🏥 Site Distribution:")
-    report_lines.append(df["site"].value_counts().to_string())
+# --- Identify missing by field ---
+missing_age = df[df["age"].isnull()][["subjectkey"]]
+missing_IQ = df[df["IQ"].isnull()][["subjectkey"]]
+missing_diag = df[df["diagnosis"].isnull()][["subjectkey"]]
 
-    # 4. IQ summary
-    report_lines.append("\n🧠 IQ Summary:")
-    report_lines.append(df["IQ"].describe().to_string())
+missing_details = []
+if not missing_age.empty:
+    ids = ", ".join(missing_age["subjectkey"].astype(str).values)
+    missing_details.append(f"- Missing age: {len(missing_age)} subject(s) → {ids}")
+if not missing_IQ.empty:
+    ids = ", ".join(missing_IQ["subjectkey"].astype(str).values)
+    missing_details.append(f"- Missing IQ: {len(missing_IQ)} subject(s) → {ids}")
+if not missing_diag.empty:
+    ids = ", ".join(missing_diag["subjectkey"].astype(str).values)
+    missing_details.append(f"- Missing diagnosis: {len(missing_diag)} subject(s) → {ids}")
+missing_summary = "\n".join(missing_details) if missing_details else "None"
 
-    # Combine all lines
-    full_report = "\n".join(report_lines)
+# --- Site, sex, scanner summaries ---
+site_dist = df["site"].value_counts().to_string()
+sex_dist = df["sex"].value_counts().to_string()
+scanner_dist = df["scanner_type"].value_counts().to_string()
+asd_dist = df["diagnosis"].value_counts().to_string()
 
-    # Print to console
-    print(full_report)
+# --- Assemble report text ---
+report_lines = [
+    f"🔍 QC Report for {Path(cleaned_path).name}",
+    f"Total rows: {n_total}",
+    "",
+    "🔧 Missing Values Breakdown:",
+    missing_summary,
+    "",
+    f"Age outliers (<5 or >64): {n_age_outliers}",
+    f"IQ outliers (<70 or >145): {n_IQ_outliers}",
+    "",
+    "📊 Site Distribution:",
+    site_dist,
+    "",
+    "📊 Sex Distribution (M = 1, F = 2):",
+    sex_dist,
+    "",
+    "📊 Scanner Type Distribution:",
+    scanner_dist,
+    "",
+    "📊 Diagnosis Distribution (ASD = 1, TD = 0):",
+    asd_dist
+]
 
-    # Save to file
-    with open(output_path, "w") as f:
-        f.write(full_report)
+report_text = "\n".join(report_lines)
 
-    print(f"\n✅ Report saved to {output_path}")
+# --- Save reports ---
+report_path = f"data/cleaned/{dataset_name}_qc_report.txt"
+with open(report_path, "w") as f:
+    f.write("\n".join(report_lines))
 
-if __name__ == "__main__":
-    run_qc_report("data/cleaned/clinical_data_cleaned.csv", "data/cleaned/qc_report.txt")
 
+flagged_path = f"data/cleaned/{dataset_name}_qc_flags.csv"
+df_flags = df[df["missing_flag"] | df["age_outlier"] | df["IQ_outlier"]]
+df_flags.to_csv(flagged_path, index=False)
+
+print("✅ QC report generated:")
+print(report_text)

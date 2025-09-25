@@ -1,5 +1,0 @@
-subject_id,site,age,sex,IQ,diagnosis,change_type
-sub-002,B,12,1,100,TD,Added
-sub-006,C,12,1,90,TD,Added
-sub-007,A,9,0,105,ASD,Added
-sub-001,A,10,0,105,ASD,Removed
